@@ -112,9 +112,22 @@
         transform: scale(1.05);
         box-shadow: 0px 10px 25px rgba(255,105,180,0.5);
     }
+     .footer {
+        font-size: 0.8em;
+        color: #ff69b4;
+        text-align: center;
+        padding: 10px 0;
+        background: #fff0f5;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        z-index: 100;
+    }
 </style>
 </head>
 <body>
+
     <h1>Nous Deux 💖</h1>
     <div class="menu">
         <button onclick="showSection('temps')">⏳ Temps</button>
@@ -130,13 +143,15 @@
 
     <!-- Section Photo mignonne -->
     <div id="photo" class="section">
-        <h2>Photo mignonne de nous 🥰</h2>
+        <h2>Photo mignonne 🥰</h2>
 
         <div class="action-buttons">
             <button onclick="showRandomPhoto()">Voir une photo mignonne</button>
         </div>
         <div id="cutePhotoDisplay"></div>
     </div>
+     <div class="footer">Site créé avec amour 💖</div>
+
 
     <!-- Section Casino -->
     <div id="casino" class="section">
@@ -186,7 +201,7 @@
 
 
     </div>
-
+<div class="footer">Site créé avec amour 💖</div>
 <script>
 // Navigation
 function showSection(id) {
@@ -450,20 +465,8 @@ function playCasino() {
     localStorage.setItem('lastTicketTime', now);
 }
 </script>
-<footer style="
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    text-align: center;
-    font-size: 0.9em;
-    color: #ff9aad;
-    background: rgba(255, 238, 245, 0.5);
-    padding: 10px 0;
-">
-    💖 Créé avec amour pour nous deux 💖
-</footer>
 
+</footer>
 </body>
 
 </html>
-
