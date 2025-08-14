@@ -115,7 +115,7 @@
 </style>
 </head>
 <body>
-    <h1>Nous 2 💖</h1>
+    <h1>Nous Deux 💖</h1>
     <div class="menu">
         <button onclick="showSection('temps')">⏳ Temps</button>
         <button onclick="showSection('photo')">📸 Photo mignonne</button>
@@ -145,6 +145,46 @@
             <button onclick="playCasino()">Tenter ma chance</button>
         </div>
         <div id="casinoResult" class="ticket"></div>
+        <div style="margin: 20px auto; max-width: 800px; text-align: center;">
+    <div style="background: #ff9aad; color: white; padding: 10px 15px; border-radius: 10px; font-weight: bold; margin-bottom: 15px;">
+        Lors de l'utilisation d'un ticket, je dois faire l'action inscrite sans me plaindre 😘
+    </div>
+         <h3>Limites des tickets 🎟️</h3>
+<table style="margin: 20px auto; border-collapse: collapse; width: 80%; max-width: 600px; text-align: left;">
+    <tr style="background: #ffdde1;">
+        <th style="padding: 10px; border: 1px solid #ff9aad;">Valable 1 seule fois</th>
+        <td style="padding: 10px; border: 1px solid #ff9aad;">
+            Un poème – 4,5%<br>
+            🥞Petit-déj préparé par mes soins – 5,7%<br>
+            😏Tu fais ce que tu veux ce soir – 4%<br>
+            🎥Regarder La La Land ensemble – 0,6%<br>
+            🍽️Restaurant – 2,8%
+        </td>
+    </tr>
+    <tr style="background: #ffeef5;">
+        <th style="padding: 10px; border: 1px solid #ff9aad;">3 fois maximum</th>
+        <td style="padding: 10px; border: 1px solid #ff9aad;">
+            💆Massage – 4%<br>
+            🎬Cinéma – 2,8%<br>
+            🍦Aller manger une glace – 5,7%<br>
+            🥪Pique-nique – 2,8%<br>
+            🏖️Aller à la plage – 2,8%<br>
+            👩‍🍳Je cuisine ce soir – 8,5%<br>
+            🍕On commande – 8,5%<br>
+            📺Regarder un film ensemble - 5,7%
+        </td>
+    </tr>
+    <tr style="background: #ffd1dc;">
+        <th style="padding: 10px; border: 1px solid #ff9aad;">Utilisation illimitée</th>
+        <td style="padding: 10px; border: 1px solid #ff9aad;">
+            Un bisou 😘 – 15%<br>
+            🔥Une partie de jambe en l’air – 6%<br>
+            🎲On fait un jeu de société – 6,6%
+        </td>
+    </tr>
+</table>
+
+
     </div>
 
 <script>
@@ -381,18 +421,26 @@ function playCasino() {
     }
 
     // Tirage aléatoire
-    const roll = Math.floor(Math.random() * 111) + 1;
+    const roll = Math.random() * 100; // 0 à 100
     let result = "";
-    if (roll <= 30) result = "😅 Rien gagné cette fois...";
-    else if (roll === 31) result = "🎥 Ticket : Regarder La La Land ensemble";
-    else if (roll <= 41) result = "💆 Ticket : Massage";
-    else if (roll <= 46) result = "🍽️ Ticket : Restaurant";
-    else if (roll <= 51) result = "🎬 Ticket : Cinéma";
-    else if (roll <= 61) result = "📺 Ticket : Regarder un film ensemble";
-    else if (roll <= 71) result = "🍦 Ticket : Manger une glace";
-    else if (roll <= 76) result = "🥪 Ticket : Pique-nique";
-    else if (roll <= 81) result = "🏖️ Ticket : Aller à la plage";
-    else result = "💋 Ticket : Un bisou 😘";
+
+   if (roll < 17) result = "😅 Rien gagné cette fois...";
+    else if (roll < 17 + 0.6) result = "🎥 Ticket : Regarder La La Land ensemble";
+    else if (roll < 17 + 0.6 + 4) result = "💆 Ticket : Massage"; 
+    else if (roll < 17 + 0.6 + 4 + 2.8) result = "🍽️ Ticket : Restaurant";
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8) result = "🎬 Ticket : Cinéma";
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8 + 5.7) result = "📺 Ticket : Regarder un film ensemble";
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8 + 5.7 + 5.7) result = "🍦 Ticket : Aller manger une glace";
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8 + 5.7 + 5.7 + 2.8) result = "🥪 Ticket : Pique-nique";
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8 + 5.7 + 5.7 + 2.8 + 2.8) result = "🏖️ Ticket : Aller à la plage";
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8 + 5.7 + 5.7 + 2.8 + 2.8 + 15) result = "💋 Ticket : Un bisou 😘"; // bisou augmenté
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8 + 5.7 + 5.7 + 2.8 + 2.8 + 15 + 1.5) result = "📜 Ticket : Un poème";
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8 + 5.7 + 5.7 + 2.8 + 2.8 + 15 + 1.5 + 6) result = "🔥 Ticket : Une partie de jambe en l’air";
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8 + 5.7 + 5.7 + 2.8 + 2.8 + 15 + 1.5 + 6 + 4) result = "😏 Ticket : Tu fais ce que tu veux ce soir";
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8 + 5.7 + 5.7 + 2.8 + 2.8 + 15 + 1.5 + 6 + 4 + 8.5) result = "👩‍🍳 Ticket : Je cuisine ce soir";
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8 + 5.7 + 5.7 + 2.8 + 2.8 + 15 + 1.5 + 6 + 4 + 8.5 + 8.5) result = "🍕 Ticket : On commande";
+    else if (roll < 17 + 0.6 + 4 + 2.8 + 2.8 + 5.7 + 5.7 + 2.8 + 2.8 + 15 + 1.5 + 6 + 4 + 8.5 + 8.5 + 5.7) result = "🥞 Ticket : Petit-déj préparé par mes soins";
+    else result = "🎲 Ticket : On fait un jeu de société";
 
     const casinoDiv = document.getElementById('casinoResult');
     casinoDiv.textContent = result;
