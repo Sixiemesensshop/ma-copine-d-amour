@@ -523,7 +523,7 @@
         let historyTickets = JSON.parse(localStorage.getItem('historyTickets')) || [];
         
         function playCasino() {
-            const lastTime = localStorage.getItem('lastTicketTime');
+            const lastTime = parseInt(localStorage.getItem('lastTicketTime'), 10);
             const now = new Date().getTime();
 
             // Vérifier si moins de 24h se sont écoulées
@@ -671,3 +671,4 @@
 
 </body>
 </html>
+
