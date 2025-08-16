@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -22,6 +21,62 @@
 </style>
 </head>
 <body>
+  <audio id="music" loop preload="auto">
+  <source src="https://res.cloudinary.com/dejvzsdej/video/upload/v1755373731/Vid%C3%A9o_sans_titre_R%C3%A9alis%C3%A9e_avec_Clipchamp.mp3_online-audio-converter.com_uguqf7.mp3" type="audio/mpeg">
+</audio>
+
+<button id="musicBtn"></button>
+
+<style>
+  #musicBtn {
+    position: absolute;
+    bottom: 150px; /* un peu plus haut */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    border: none;
+    background: linear-gradient(145deg, #ff8aa0, #ff6f85); /* pastel rose */
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    z-index: 10;
+  }
+
+  #musicBtn:hover {
+    transform: translateX(-50%) scale(1.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  }
+
+  /* Triangle "play" au milieu */
+  #musicBtn::before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    border-left: 20px solid white;
+    border-top: 14px solid transparent;
+    border-bottom: 14px solid transparent;
+  }
+</style>
+
+<script>
+const music = document.getElementById('music');
+const btn = document.getElementById('musicBtn');
+
+btn.addEventListener('click', () => {
+  music.play()
+    .then(() => console.log("🎵 Musique lancée !"))
+    .catch(e => console.log("Musique bloquée :", e));
+
+  btn.style.display = 'none'; // cache le bouton après lecture
+});
+</script>
+
 <canvas id="stars"></canvas>
 <script>
 const LOVE_LINES = [
