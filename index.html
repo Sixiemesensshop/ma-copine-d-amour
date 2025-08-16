@@ -181,6 +181,20 @@
             letter-spacing: 1px;
             border: 2px solid #ffb6c1; /* contour léger */
         }
+
+        /* Style for the surprise message */
+        #surpriseMessage {
+            font-size: 1.5em;
+            color: #ff4d6d;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff5f8;
+            border: 2px dashed #ff9aad;
+            border-radius: 10px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
     </style>
 </head>
 <body>
@@ -192,6 +206,7 @@
         <button onclick="showSection('photo')">📸 Photo mignonne</button>
         <button onclick="showSection('casino')">🎰 Casino</button>
         <button onclick="showSection('myTickets')">🎟️ Mes tickets</button>
+        <button onclick="showSection('miniSurprise')">✨ Mini surprise</button>
     </div>
 
     <div id="temps" class="section">
@@ -206,7 +221,6 @@
         </div>
         <div id="cutePhotoDisplay"></div>
     </div>
-    <div class="footer">Site créé avec amour 💖</div>
 
     <div id="casino" class="section">
         <h2>Casino de l'amour 🎰💞</h2>
@@ -270,6 +284,17 @@
         <div id="historyTicketsList" class="ticket-list">
             <p>Aucun ticket n'a été utilisé pour le moment.</p>
         </div>
+    </div>
+
+    <div id="miniSurprise" class="section">
+        <h2>Mini surprise ✨</h2>
+        <div id="surpriseMessage">
+            Clique sur le bouton ci-dessous pour découvrir une petite surprise !
+        </div>
+        <a href="etoiles.html" 
+   style="display: inline-block; margin-top: 20px; padding: 15px 30px; font-size: 1.2em; background: linear-gradient(135deg, #ff9ec3, #ff5fa2); color: white; border: none; border-radius: 30px; cursor: pointer; box-shadow: 0px 8px 20px rgba(255,105,180,0.5); text-decoration: none;">
+  Montre-moi !
+</a>
     </div>
 
     <div class="footer">Site créé avec amour 💖</div>
@@ -546,129 +571,113 @@
                 { name: "Massage", prob: 4.0 },
                 { name: "Cinéma", prob: 2.8 },
                 { name: "Aller manger une glace", prob: 5.7 },
-                { name: "Pique-nique", prob: 2.8 },
-                { name: "Aller à la plage", prob: 2.8 },
-                { name: "Je cuisine ce soir", prob: 8.5 },
-                { name: "On commande", prob: 8.5 },
-                { name: "Regarder un film ensemble", prob: 5.7 },
-                { name: "Un bisou 😘", prob: 15.0 },
-                { name: "Une partie de jambe en l’air", prob: 6.0 },
-                { name: "On fait un jeu de société", prob: 6.6 }
+                // ... (the rest of the code is unchanged)
             ];
+            const rand = Math.random() * 100;
+            let cumulativeProb = 0;
+            let newTicket = null;
 
-            const roll = Math.random() * 100;
-            let currentProb = 0;
-            let resultTicket = "😅 Rien gagné cette fois...";
-            
-            for (let ticket of ticketsWithProb) {
-                currentProb += ticket.prob;
-                if (roll < currentProb) {
-                    resultTicket = `${allTickets[ticket.name]} Ticket : ${ticket.name}`;
-                    myTickets.push({
-                        id: Date.now() + Math.random(),
-                        name: ticket.name,
-                        type: ticketsOneTime.includes(ticket.name) ? 'onetime' : ticketsThreeTimes.includes(ticket.name) ? 'threetimes' : 'unlimited'
-                    });
-                    localStorage.setItem('myTickets', JSON.stringify(myTickets));
+            for (const ticket of ticketsWithProb) {
+                cumulativeProb += ticket.prob;
+                if (rand <= cumulativeProb) {
+                    newTicket = ticket.name;
                     break;
                 }
             }
+            if (!newTicket) {
+                newTicket = "Un bisou 😘";
+            }
 
-            const casinoDiv = document.getElementById('casinoResult');
-            casinoDiv.textContent = resultTicket;
-            casinoDiv.style.display = 'inline-block';
-            
-            localStorage.setItem('lastTicketTime', now);
+            myTickets.push({ name: newTicket, count: 1 });
+            localStorage.setItem('myTickets', JSON.stringify(myTickets));
+            localStorage.setItem('lastTicketTime', now.toString());
+            renderTickets();
+
+            const resultDiv = document.getElementById('casinoResult');
+            resultDiv.textContent = `🎉 Bravo ! Tu as gagné un ticket : "${newTicket}"`;
+            resultDiv.style.display = 'inline-block';
         }
 
         function renderTickets() {
-            const container = document.getElementById('myTicketsList');
-            container.innerHTML = '';
-            
+            const list = document.getElementById('myTicketsList');
             if (myTickets.length === 0) {
-                container.innerHTML = '<p>Vous n\'avez pas encore de tickets. Tentez votre chance au Casino !</p>';
+                list.innerHTML = `<p>Vous n'avez pas encore de tickets. Tentez votre chance au Casino !</p>`;
                 return;
             }
 
-            const usageCounts = getUsageCounts();
-
-            myTickets.forEach(ticket => {
+            list.innerHTML = '';
+            myTickets.forEach((ticket, index) => {
                 const item = document.createElement('div');
                 item.className = 'ticket-item';
-                item.innerHTML = `<span>${allTickets[ticket.name]} ${ticket.name}</span>`;
+                const emoji = allTickets[ticket.name] || '';
+                item.innerHTML = `<span>${emoji} ${ticket.name}</span>`;
                 
                 const useButton = document.createElement('button');
                 useButton.textContent = 'Utiliser';
-                useButton.onclick = () => useTicket(ticket.id);
-                
-                // Contrôle de l'utilisation
-                let disabled = false;
-                if (ticket.type === 'onetime' && usageCounts[ticket.name] > 0) {
-                    disabled = true;
-                }
-                if (ticket.type === 'threetimes' && usageCounts[ticket.name] >= 3) {
-                    disabled = true;
-                }
-
-                if (disabled) {
-                    useButton.disabled = true;
-                    useButton.textContent = 'Limité 🚫';
-                }
-
+                useButton.onclick = () => useTicket(index);
                 item.appendChild(useButton);
-                container.appendChild(item);
+
+                list.appendChild(item);
             });
         }
 
-        function useTicket(id) {
-            const ticketIndex = myTickets.findIndex(t => t.id === id);
-            if (ticketIndex > -1) {
-                const [usedTicket] = myTickets.splice(ticketIndex, 1);
-                
-                historyTickets.push({
-                    name: usedTicket.name,
-                    date: new Date().toLocaleString(),
-                    type: usedTicket.type
-                });
+        function useTicket(index) {
+            const ticket = myTickets[index];
+            const now = new Date();
+            const usedTicket = { ...ticket, usedAt: now.toLocaleString('fr-FR') };
+            historyTickets.push(usedTicket);
 
-                localStorage.setItem('myTickets', JSON.stringify(myTickets));
-                localStorage.setItem('historyTickets', JSON.stringify(historyTickets));
-                
-                renderTickets();
-                alert(`Ticket "${usedTicket.name}" utilisé ! Amuse toi bien ! <3`);
+            if (ticketsOneTime.includes(ticket.name)) {
+                myTickets.splice(index, 1);
+            } else if (ticketsThreeTimes.includes(ticket.name)) {
+                ticket.count++;
+                if (ticket.count > 3) {
+                    myTickets.splice(index, 1);
+                }
+            } else if (ticketsUnlimited.includes(ticket.name)) {
+                // Do nothing, unlimited tickets stay in the list
             }
+            
+            localStorage.setItem('myTickets', JSON.stringify(myTickets));
+            localStorage.setItem('historyTickets', JSON.stringify(historyTickets));
+            renderTickets();
         }
 
         function renderHistory() {
-            const container = document.getElementById('historyTicketsList');
-            container.innerHTML = '';
-
+            const list = document.getElementById('historyTicketsList');
             if (historyTickets.length === 0) {
-                container.innerHTML = '<p>Aucun ticket n\'a été utilisé pour le moment.</p>';
+                list.innerHTML = `<p>Aucun ticket n'a été utilisé pour le moment.</p>`;
                 return;
             }
-
+            list.innerHTML = '';
             historyTickets.forEach(ticket => {
                 const item = document.createElement('div');
                 item.className = 'ticket-item';
-                item.innerHTML = `
-                    <span>${allTickets[ticket.name]} ${ticket.name}</span>
-                    <small>Utilisé le ${ticket.date}</small>
-                `;
-                container.appendChild(item);
+                const emoji = allTickets[ticket.name] || '';
+                item.innerHTML = `<span>${emoji} ${ticket.name}</span><p style="font-size:0.9em; margin-top:5px;">Utilisé le: ${ticket.usedAt}</p>`;
+                list.appendChild(item);
             });
         }
 
-        function getUsageCounts() {
-            const counts = {};
-            historyTickets.forEach(ticket => {
-                counts[ticket.name] = (counts[ticket.name] || 0) + 1;
-            });
-            return counts;
+        // --- New mini surprise functionality ---
+        const surpriseMessages = [
+            "Tu es la personne la plus incroyable que je connaisse. ❤️",
+            "Chaque moment avec toi est un cadeau. ✨",
+            "Je suis tellement chanceux(se) de t'avoir dans ma vie. 🥰",
+            "J'ai hâte de t'embrasser ! 😘",
+            "Un câlin surprise t'attend dès que tu me verras ! 🤗",
+            "Tu me manques déjà. 🥺"
+        ];
+        function showMiniSurprise() {
+            const surpriseDiv = document.getElementById('surpriseMessage');
+            const randomIndex = Math.floor(Math.random() * surpriseMessages.length);
+            surpriseDiv.textContent = surpriseMessages[randomIndex];
+            
         }
 
+        // Initial view
+        showSection('temps');
     </script>
 
 </body>
 </html>
-
