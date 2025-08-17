@@ -1,188 +1,699 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
-<title>Je t'aime étoilé</title>
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    height: 100%;
-    font-family: 'Brush Script MT', cursive;
-    touch-action: manipulation; /* pour éviter les scrolls involontaires */
-  }
-  canvas {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    display: block;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nous 2</title>
+    <style>
+        body {
+            font-family: 'Dancing Script', cursive;
+            text-align: center;
+            background: linear-gradient(135deg, #ffeef5, #fffaf0);
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 150px;
+            padding: 0;
+        }
+        h1 {
+            font-size: 3em;
+            margin: 20px 0;
+            color: #ff6f91;
+            text-shadow: 2px 2px #ffd1dc;
+        }
+        .menu {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 35px;
+            margin-top: 50px;
+        }
+        .menu button {
+            font-size: 1.5em;
+            padding: 15px 50px;
+            border: none;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #ff9ec3, #ff5fa2);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0px 8px 20px rgba(255,105,180,0.5);
+            color: white;
+            font-weight: bold;
+        }
+        .menu button:hover {
+            background: linear-gradient(135deg, #ff7fa5, #ff337b);
+            transform: scale(1.1);
+            box-shadow: 0px 10px 25px rgba(255,105,180,0.7);
+        }
+        .section {
+            display: none;
+            margin-top: 30px;
+            animation: fadeIn 0.5s;
+        }
+        img {
+            max-width: 90%;
+            border-radius: 20px;
+            margin-top: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        img:hover {
+            transform: scale(1.05);
+        }
+        p {
+            font-size: 1.2em;
+            color: #ff4d6d;
+        }
+        input[type=file] {
+            margin-top: 15px;
+            border-radius: 15px;
+            padding: 5px;
+            border: 1px solid #ff9aad;
+            background: #fff0f5;
+            cursor: pointer;
+        }
+        @keyframes fadeIn {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+        #cutePhotoDisplay img, #casinoResult {
+            margin-top: 15px;
+            font-size: 1.3em;
+            color: #ff337b;
+        }
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .action-buttons button {
+            background: linear-gradient(135deg, #ffb3c6, #ff6f91);
+            font-size: 1.3em;
+            padding: 12px 25px;
+            border-radius: 30px;
+            box-shadow: 0px 6px 15px rgba(255,105,180,0.5);
+        }
+        .action-buttons button:hover {
+            background: linear-gradient(135deg, #ff8aa1, #ff4d75);
+            transform: scale(1.1);
+        }
+        .ticket {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 20px 40px;
+            background: #fff0f5;
+            border: 3px dashed #ff6f91;
+            border-radius: 15px;
+            font-size: 1.4em;
+            color: #ff4d6d;
+            box-shadow: 0px 8px 20px rgba(255,105,180,0.3);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        .ticket:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 10px 25px rgba(255,105,180,0.5);
+        }
+        .ticket-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .ticket-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background: #fff0f5;
+            border: 2px solid #ff9aad;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 250px;
+            min-width: 150px;
+        }
+        .ticket-item span {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #ff4d6d;
+        }
+        .ticket-item button {
+            padding: 8px 15px;
+            font-size: 0.9em;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            background-color: #ff6f91;
+            color: white;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .ticket-item button:hover {
+            background-color: #ff337b;
+            transform: scale(1.05);
+        }
+        .ticket-item button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        .footer {
+            font-size: 0.8em;
+            color: #ff69b4;
+            text-align: center;
+            padding: 10px 0;
+            background: #fff0f5;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        #timer {
+            font-size: 2.5em;
+            font-family: 'Segoe UI', sans-serif;
+            background: #ffe4ec; /* rose pastel */
+            color: #d6336c; /* rose foncé romantique */
+            padding: 15px 25px;
+            border-radius: 15px;
+            display: inline-block;
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.1);
+            letter-spacing: 1px;
+            border: 2px solid #ffb6c1; /* contour léger */
+        }
 
-  /* Bouton adapté mobile */
-  #musicBtn {
-    position: absolute;
-    bottom: 120px; /* un peu plus haut pour mobile */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    border: none;
-    background: linear-gradient(145deg, #ff8aa0, #ff6f85); /* rose foncé */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    z-index: 10;
-    touch-action: manipulation;
-  }
+        /* Style for the surprise message */
+        #surpriseMessage {
+            font-size: 1.5em;
+            color: #ff4d6d;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 20px;
+            background: #fff5f8;
+            border: 2px dashed #ff9aad;
+            border-radius: 10px;
+            animation: fadeIn 1s ease-in-out;
+        }
 
-  /* Triangle "play" */
-  #musicBtn::before {
-    content: '';
-    display: block;
-    width: 0;
-    height: 0;
-    border-left: 24px solid white;
-    border-top: 15px solid transparent;
-    border-bottom: 15px solid transparent;
-  }
-</style>
+    </style>
 </head>
 <body>
 
-<audio id="music" loop preload="auto">
-  <source src="https://res.cloudinary.com/dejvzsdej/video/upload/v1755373731/Vid%C3%A9o_sans_titre_R%C3%A9alis%C3%A9e_avec_Clipchamp.mp3_online-audio-converter.com_uguqf7.mp3" type="audio/mpeg">
-</audio>
+    <h1>Nous Deux 💖</h1>
 
-<button id="musicBtn"></button>
+    <div class="menu">
+        <button onclick="showSection('temps')">⏳ Temps</button>
+        <button onclick="showSection('photo')">📸 Photo mignonne</button>
+        <button onclick="showSection('casino')">🎰 Casino</button>
+        <button onclick="showSection('myTickets')">🎟️ Mes tickets</button>
+        <button onclick="showSection('miniSurprise')">✨ Mini surprise</button>
+    </div>
 
-<canvas id="stars"></canvas>
+    <div id="temps" class="section">
+        <h2>Depuis le début de notre relation ❤️</h2>
+        <div id="timer" style="font-size:1.5em;"></div>
+    </div>
 
-<script>
-const music = document.getElementById('music');
-const btn = document.getElementById('musicBtn');
+    <div id="photo" class="section">
+        <h2>Photo mignonne 🥰</h2>
+        <div class="action-buttons">
+            <button onclick="showRandomPhoto()">Voir une photo mignonne</button>
+        </div>
+        <div id="cutePhotoDisplay"></div>
+    </div>
 
-btn.addEventListener('click', () => {
-  music.play().catch(e => console.log("Musique bloquée :", e));
-  btn.style.display = 'none'; // cache le bouton
-});
+    <div id="casino" class="section">
+        <h2>Casino de l'amour 🎰💞</h2>
+        <div class="action-buttons">
+            <button onclick="playCasino()">Tenter ma chance</button>
+        </div>
+        <div id="casinoResult" class="ticket"></div>
+        <div style="margin: 20px auto; max-width: 800px; text-align: center;">
+            <div style="background: #ff9aad; color: white; padding: 10px 15px; border-radius: 10px; font-weight: bold; margin-bottom: 15px;">
+                Lors de l'utilisation d'un ticket, je dois faire l'action inscrite sans me plaindre 😘
+            </div>
+            <h3>Limites des tickets 🎟️</h3>
+            <table style="margin: 20px auto; border-collapse: collapse; width: 80%; max-width: 600px; text-align: left;">
+                <tr style="background: #ffdde1;">
+                    <th style="padding: 10px; border: 1px solid #ff9aad;">Valable 1 seule fois</th>
+                    <td style="padding: 10px; border: 1px solid #ff9aad;">
+                        Un poème – 4,5%<br>
+                        🥞Petit-déj préparé par mes soins – 5,7%<br>
+                        😏Tu fais ce que tu veux ce soir – 4%<br>
+                        🎥Regarder La La Land ensemble – 0,6%<br>
+                        🍽️Restaurant – 2,8%
+                    </td>
+                </tr>
+                <tr style="background: #ffeef5;">
+                    <th style="padding: 10px; border: 1px solid #ff9aad;">3 fois maximum</th>
+                    <td style="padding: 10px; border: 1px solid #ff9aad;">
+                        💆Massage – 4%<br>
+                        🎬Cinéma – 2,8%<br>
+                        🍦Aller manger une glace – 5,7%<br>
+                        🥪Pique-nique – 2,8%<br>
+                        🏖️Aller à la plage – 2,8%<br>
+                        👩‍🍳Je cuisine ce soir – 8,5%<br>
+                        🍕On commande – 8,5%<br>
+                        📺Regarder un film ensemble - 5,7%
+                    </td>
+                </tr>
+                <tr style="background: #ffd1dc;">
+                    <th style="padding: 10px; border: 1px solid #ff9aad;">Utilisation illimitée</th>
+                    <td style="padding: 10px; border: 1px solid #ff9aad;">
+                        Un bisou 😘 – 15%<br>
+                        🔥Une partie de jambe en l’air – 6%<br>
+                        🎲On fait un jeu de société – 6,6%
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    
+    <div id="myTickets" class="section">
+        <h2>Mes tickets 🎟️</h2>
+        <div id="myTicketsList" class="ticket-list">
+            <p>Vous n'avez pas encore de tickets. Tentez votre chance au Casino !</p>
+        </div>
+        <button onclick="showSection('historyTickets')" style="margin-top: 20px; padding: 10px 20px; font-size: 1.1em; background: linear-gradient(135deg, #ffb3c6, #ff6f91); color: white; border: none; border-radius: 20px; cursor: pointer;">
+            📜 Voir l'historique
+        </button>
+    </div>
 
-// Canvas
-const LOVE_LINES = [
-  "Je t'aime","Je t'aime","I love you","I love you","Te amo","Ti amo","Ich liebe dich","Te quero",
-  "Eu te amo","T'estimo","Jag älskar dig","Mahal kita","Saya cinta kamu","Je t'aime","I Love you",
-  "Mon Amour","My Love","Mon Coeur"
-];
+    <div id="historyTickets" class="section">
+        <h2>Historique des tickets 📜</h2>
+        <div id="historyTicketsList" class="ticket-list">
+            <p>Aucun ticket n'a été utilisé pour le moment.</p>
+        </div>
+    </div>
 
-const canvas = document.getElementById("stars");
-const ctx = canvas.getContext("2d");
-let W, H;
-let particles = [], starfield = [], shootingStars = [];
+    <div id="miniSurprise" class="section">
+        <h2>Mini surprise ✨</h2>
+        <div id="surpriseMessage">
+            Clique sur le bouton ci-dessous pour découvrir une petite surprise !
+        </div>
+        <a href="etoiles.html" 
+   style="display: inline-block; margin-top: 20px; padding: 15px 30px; font-size: 1.2em; background: linear-gradient(135deg, #ff9ec3, #ff5fa2); color: white; border: none; border-radius: 30px; cursor: pointer; box-shadow: 0px 8px 20px rgba(255,105,180,0.5); text-decoration: none;">
+  Montre-moi !
+</a>
+    </div>
 
-function resize() {
-  W = window.innerWidth; 
-  H = window.innerHeight;
-  canvas.width = W; 
-  canvas.height = H;
+    <div class="footer">Site créé avec amour 💖</div>
+
+    <script>
+        // Navigation
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(sec => sec.style.display = 'none');
+            document.getElementById(id).style.display = 'block';
+            if (id === 'myTickets') {
+                renderTickets();
+            } else if (id === 'historyTickets') {
+                renderHistory();
+            }
+        }
+
+        // Timer temps réel
+        const startDate = new Date('2024-09-06T00:00:00');
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((diff / (1000 * 60)) % 60);
+            const seconds = Math.floor((diff / 1000) % 60);
+            document.getElementById('timer').textContent = `${days} jours, ${hours}h ${minutes}m ${seconds}s`;
+        }
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // Photo mignonne stockage local
+        let cutePhotos = [
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167147/IMG_1848_jjgleb.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167147/IMG_1851_rvrds4.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167146/IMG_1850_kv8nsr.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167140/IMG_1852_izmett.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167140/IMG_1849_mcrvww.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167139/IMG_1853_nbayio.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167138/IMG_1854_ek96yx.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167100/IMG_8022_w1lufn.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167100/IMG_8033_kdzhfz.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167096/IMG_6871_djn4i9.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167094/IMG_6870_by2omu.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167094/IMG_6869_waxkgr.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167093/IMG_6868_dwfm1h.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167090/IMG_6867_ua2udj.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167088/IMG_7958_np1epx.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167088/IMG_7938_w5e28w.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167087/IMG_7937_vuzstz.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167083/IMG_7936_f30jmg.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167082/E7EE533D-8C55-443E-9A2C-2A9E54C21E81_bs6ht5.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167082/IMG_7935_u67lrz.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167081/IMG_7934_bgjdp7.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167078/IMG_6741_gcsvoq.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167077/IMG_6732_dgfmg8.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167076/IMG_6735_uvaess.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167074/IMG_6733_ns7wwt.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167070/IMG_7931_pem5nb.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167069/IMG_6740_dtszo9.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167069/IMG_6742_twwlzl.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167069/IMG_7930_afxny0.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167068/IMG_7929_tj4h0u.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167065/IMG_6739_phmlkp.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167061/IMG_6731_rg8jwl.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167061/IMG_6737_ohvvoa.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167060/IMG_6738_m9a5hv.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167060/IMG_1400_mx2ort.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167060/IMG_6730_atrmcc.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167055/IMG_6770_ebvfnk.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167054/IMG_1111_rgvnms.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167054/IMG_6750_g96k5d.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167054/IMG_6751_baglsg.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167053/IMG_6749_ianlvt.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167049/IMG_6747_wd8j4w.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167049/IMG_6746_ur6vxn.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167048/IMG_6745_mgqb7v.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167047/IMG_6744_flndlj.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167044/IMG_6743_grqln4.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167043/IMG_6741_c5t2yk.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167042/IMG_6719_h7aslo.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167042/IMG_6718_nptluk.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167041/IMG_6717_r3tdkw.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167038/IMG_6716_rffe66.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167037/IMG_6714_ahyvog.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167037/IMG_6711_ospm85.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167036/_MGL3323_dlwmuy.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167033/_MGL3321_l8icxk.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167033/_MGL3321_l8icxk.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167032/IMG_0858_dzftew.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167032/IMG_0764_mcuod6.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167032/IMG_0706_tyc8jr.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167028/IMG_0705_sgwqrw.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167028/IMG_0704_sdgx79.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167027/IMG_2259_pcufnb.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167027/IMG_0701_eb8cwm.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167025/IMG_0448_xln8j0.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167023/IMG_0990_oeaua1.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167021/IMG_0987_ljw9aa.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167021/IMG_0986_de3crq.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167021/IMG_0985_qghfcz.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167020/IMG_0984_dlkf9g.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167018/IMG_0982_utd8si.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167016/IMG_0977_xivey8.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167016/IMG_0973_mpomt0.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167015/47285FF1-356B-4897-9183-38CF3191EC77_zt3nbf.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167015/IMG_0410_avphta.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167013/51929CB2-8050-4F54-BF50-213228A2BA59_pyffjw.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167012/D9ECF464-36D5-4D7E-B7E2-215E3AA64E49_paofqw.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167011/IMG_0946_xwzui2.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167009/IMG_0946_rxgbif.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167008/IMG_0083_xzqibj.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167007/IMG_3426_z3k6bz.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167007/IMG_0084_v5gxvr.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167007/IMG_0085_ill4pp.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167004/IMG_3422_zc4pls.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167003/IMG_3421_d1v0xm.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167003/IMG_3418_fuywkz.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755167002/IMG_3416_wo1i0d.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166995/IMG_3414_kfxjwp.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166994/IMG_3412_rb9kss.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166993/IMG_3404_bqaaws.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166991/IMG_3402_kb8bzm.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166990/IMG_3401_ua0bg1.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166990/IMG_3399_p59tha.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166990/IMG_3397_fndp10.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166988/IMG_3396_wdei1z.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166987/IMG_3384_ikpjk0.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166987/IMG_3382_gatqx5.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166986/IMG_3381_vcwujj.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166985/IMG_3380_cb0uog.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166984/IMG_3348_mk98w9.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166983/IMG_3347_c8zrqx.png",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166982/5386B8FF-37BC-4DD1-83BA-AA4F4F218B07_r6dgin.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166981/IMG_2434_utxin5.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166980/IMG_2429_lmpmdh.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166979/IMG_2428_bx74gb.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166978/IMG_2427_ol3gr5.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166978/IMG_2426_bzphwy.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166977/IMG_2425_zq7gi3.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166976/IMG_2423_ohbkj5.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166975/IMG_2422_qo1lzc.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166974/IMG_2417_juergw.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166973/IMG_2415_mmc2at.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166973/IMG_2412_uq7mji.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166972/IMG_2399_sarpmw.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166971/IMG_2397_xqkbds.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166970/IMG_2393_qqq6gu.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166970/IMG_2391_v09kml.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166969/IMG_2392_cqb5zz.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166968/IMG_2390_znxw3f.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166967/IMG_2389_r4npkq.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166967/IMG_2388_mmpnn0.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166966/IMG_2385_deguex.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166965/IMG_2381_xaxnzy.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166965/IMG_2380_frb5w1.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166963/IMG_2379_ouuxtc.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166962/IMG_2378_v2tgks.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166962/IMG_2377_loxzwr.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166962/IMG_2371_i7ngxa.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166961/IMG_2376_avwmb7.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166958/IMG_2370_pktxjx.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166956/IMG_2369_ml5ntu.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166956/IMG_2369_jpg_yltax8.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166955/IMG_2368_nggd35.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166955/IMG_2365_rojfxa.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166954/IMG_2364_goqvzt.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166953/IMG_2362_l5aekk.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166952/IMG_2361_cnp6ym.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166951/IMG_2355_muqavu.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166951/IMG_2353_xicq5f.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166951/IMG_2352_tsaf9e.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166949/IMG_2351_vq86zo.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166949/IMG_2349_jljqgk.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166948/IMG_2347_ljggpm.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166948/IMG_2346_zgrhlq.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166947/IMG_2345_qhy6an.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166946/IMG_2342_c4j18u.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166946/IMG_2340_bxrzz8.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166945/IMG_2338_kjdfzn.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166944/IMG_2337_yhcroe.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166944/IMG_2327_wl3hpp.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166943/IMG_2323_rcvlss.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166942/IMG_2322_cnjbbf.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166942/IMG_2321_bjzyqz.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166941/IMG_2320_ef759z.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166941/IMG_2319_octrkm.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166940/IMG_2318_vhculi.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166939/IMG_2316_f9n9jp.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166939/IMG_2315_pwljts.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166938/IMG_2314_w2uatp.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166937/IMG_2313_se6vsj.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166937/IMG_2311_c55xqt.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166936/IMG_2310_tdafwe.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166935/IMG_2309_rlvkyz.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166935/IMG_2308_qbochj.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166935/IMG_2307_ni2koh.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166934/IMG_2302_dzq8j4.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166933/IMG_2301_rmw4ys.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166933/IMG_2299_aw14vb.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166932/IMG_2296_w0osho.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166931/IMG_2295_ueguin.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166931/IMG_2294_y6ehhe.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166930/IMG_2293_lflif7.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166930/IMG_2288_ftdt1b.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166929/IMG_2287_suwsey.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166929/IMG_2286_bpnrjo.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166928/IMG_2278_xu82zm.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166928/IMG_2274_phvazy.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166928/IMG_2275_zicsiy.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166927/IMG_2267_bispl8.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166927/IMG_2273_qdy0n3.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166926/IMG_2268_ugsfth.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166926/IMG_2264_skhr4g.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166926/IMG_2261_jxpexl.jpg",
+            "https://res.cloudinary.com/dudmn5ldy/image/upload/v1755166925/IMG_2235_gafpli.jpg",
+        ];
+        function showRandomPhoto() {
+            if (cutePhotos.length === 0) {
+                document.getElementById('cutePhotoDisplay').innerHTML = "<p>Aucune photo 😢</p>";
+                return;
+            }
+            const randomIndex = Math.floor(Math.random() * cutePhotos.length);
+            document.getElementById('cutePhotoDisplay').innerHTML = `<img src="${cutePhotos[randomIndex]}" alt="Photo mignonne">`;
+        }
+
+        // --- Casino avec gestion des tickets ---
+        const allTickets = {
+            "Un poème": "📜",
+            "Petit-déj préparé par mes soins": "🥞",
+            "Tu fais ce que tu veux ce soir": "😏",
+            "Regarder La La Land ensemble": "🎥",
+            "Restaurant": "🍽️",
+            "Massage": "💆",
+            "Cinéma": "🎬",
+            "Aller manger une glace": "🍦",
+            "Pique-nique": "🥪",
+            "Aller à la plage": "🏖️",
+            "Je cuisine ce soir": "👩‍🍳",
+            "On commande": "🍕",
+            "Regarder un film ensemble": "📺",
+            "Un bisou 😘": "💋",
+            "Une partie de jambe en l’air": "🔥",
+            "On fait un jeu de société": "🎲"
+        };
+        
+        const ticketsOneTime = ["Un poème", "Petit-déj préparé par mes soins", "Tu fais ce que tu veux ce soir", "Regarder La La Land ensemble", "Restaurant"];
+        const ticketsThreeTimes = ["Massage", "Cinéma", "Aller manger une glace", "Pique-nique", "Aller à la plage", "Je cuisine ce soir", "On commande", "Regarder un film ensemble"];
+        const ticketsUnlimited = ["Un bisou 😘", "Une partie de jambe en l’air", "On fait un jeu de société"];
+        
+        let myTickets = JSON.parse(localStorage.getItem('myTickets')) || [];
+        let historyTickets = JSON.parse(localStorage.getItem('historyTickets')) || [];
+        
+        function playCasino() {
+    const lastTime = parseInt(localStorage.getItem('lastTicketTime'), 10);
+    const now = new Date().getTime();
+
+    // Vérifier si moins de 24h se sont écoulées
+    if (lastTime && now - lastTime < 24 * 60 * 60 * 1000) {
+        const remaining = 24 * 60 * 60 * 1000 - (now - lastTime);
+        const hours = Math.floor(remaining / (1000 * 60 * 60));
+        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+        document.getElementById('casinoResult').textContent = 
+            `⏳ Vous devez attendre ${hours}h ${minutes}m ${seconds}s avant de retirer un nouveau ticket`;
+        document.getElementById('casinoResult').style.display = 'inline-block';
+        return;
+    }
+
+    const ticketsWithProb = [
+        { name: "Un poème", prob: 4.5 },
+        { name: "Petit-déj préparé par mes soins", prob: 5.7 },
+        { name: "Tu fais ce que tu veux ce soir", prob: 4.0 },
+        { name: "Regarder La La Land ensemble", prob: 0.6 },
+        { name: "Restaurant", prob: 2.8 },
+        { name: "Massage", prob: 4.0 },
+        { name: "Cinéma", prob: 2.8 },
+        { name: "Aller manger une glace", prob: 5.7 },
+        { name: "Pique-nique", prob: 4.0 },
+        { name: "Aller à la plage", prob: 4.0 },
+        { name: "Je cuisine ce soir", prob: 3.5 },
+        { name: "On commande", prob: 4.0 },
+        { name: "Regarder un film ensemble", prob: 4.5 },
+        { name: "Un bisou 😘", prob: 20.0 },
+        { name: "Une partie de jambe en l’air", prob: 20.0 },
+        { name: "On fait un jeu de société", prob: 10.0 }
+    ];
+
+    const rand = Math.random() * 100;
+    let cumulativeProb = 0;
+    let newTicket = null;
+
+    for (const ticket of ticketsWithProb) {
+        cumulativeProb += ticket.prob;
+        if (rand <= cumulativeProb) {
+            newTicket = ticket.name;
+            break;
+        }
+    }
+
+    if (!newTicket) newTicket = "Un bisou 😘";
+
+    // Chaque ticket gagné est unique → on l'ajoute tel quel
+    myTickets.push({ name: newTicket });
+    localStorage.setItem('myTickets', JSON.stringify(myTickets));
+    localStorage.setItem('lastTicketTime', now.toString());
+    renderTickets();
+
+    const resultDiv = document.getElementById('casinoResult');
+    resultDiv.textContent = `🎉 Bravo ! Tu as gagné un ticket : "${newTicket}"`;
+    resultDiv.style.display = 'inline-block';
 }
-window.addEventListener("resize", resize);
-resize();
 
-// Classes Star, Particle, ShootingStar (même code que toi)
+       function renderTickets() {
+    const list = document.getElementById('myTicketsList');
+    if (myTickets.length === 0) {
+        list.innerHTML = `<p>Vous n'avez pas encore de tickets. Tentez votre chance au Casino !</p>`;
+        return;
+    }
 
-class Star { constructor() { this.reset(); } reset() { this.x = Math.random() * W; this.y = Math.random() * H; this.size = Math.random() * 2; this.speed = Math.random() * 0.5 + 0.2; } update() { this.y += this.speed; if (this.y > H) this.reset(); } draw() { ctx.fillStyle = 'white'; ctx.fillRect(this.x, this.y, this.size, this.size); } }
+    list.innerHTML = '';
+    myTickets.forEach((ticket, index) => {
+        const item = document.createElement('div');
+        item.className = 'ticket-item';
+        const emoji = allTickets[ticket.name] || '';
+        item.innerHTML = `<span>${emoji} ${ticket.name}</span>`;
 
-class Particle { 
-  constructor(text) { 
-    this.text = text; 
-    this.x = (Math.random()-0.5)*W; 
-    this.y = (Math.random()-0.5)*H; 
-    this.z = Math.random()*W*2+W; 
-    this.size=25; 
-    this.speed=20; 
-  } 
-  update() { 
-    this.z -= this.speed; 
-    if(this.z<1){ 
-      this.z = W*2 + Math.random()*W; 
-      this.x=(Math.random()-0.5)*W; 
-      this.y=(Math.random()-0.5)*H; 
-      this.text=LOVE_LINES[Math.floor(Math.random()*LOVE_LINES.length)];
-    } 
-  } 
-  draw() { 
-    const sx = (this.x/this.z)*W + W/2; 
-    const sy = (this.y/this.z)*H + H/2; 
-    const scale = W/this.z; 
-    const opacity = Math.min(1,3-this.z/W); 
-    let baseSize = 25; // taille de base
-let screenFactor = W <= 440 ? 0.75 : 1; // ajuste pour téléphones
-ctx.font = `${this.size * scale}px 'Dancing Script', cursive`;
-    const colors = [ {r:255,g:160,b:120}, {r:255,g:200,b:80}, {r:255,g:215,b:100}, {r:255,g:180,b:120} ]; 
-    const cycleDuration = 40000; 
-    const time = (Date.now()%cycleDuration)/cycleDuration; 
-    const index = Math.floor(time*colors.length); 
-    const nextIndex = (index+1)%colors.length; 
-    const t=(time*colors.length)%1; 
-    const c1=colors[index], c2=colors[nextIndex]; 
-    const r=c1.r+(c2.r-c1.r)*t; 
-    const g=c1.g+(c2.g-c1.g)*t; 
-    const b=c1.b+(c2.b-c1.b)*t; 
-    ctx.fillStyle=`rgba(${r},${g},${b},${opacity})`; 
-    ctx.textAlign="center"; 
-    ctx.fillText(this.text,sx,sy); 
-  } 
+        const useButton = document.createElement('button');
+
+        // 🔥 Vérifier combien de fois il a été utilisé dans l’historique
+        const usedCount = historyTickets.filter(t => t.name === ticket.name).length;
+
+        if (ticketsOneTime.includes(ticket.name) && usedCount >= 1) {
+            useButton.textContent = "Limite atteinte";
+            useButton.disabled = true;
+        } 
+        else if (ticketsThreeTimes.includes(ticket.name) && usedCount >= 3) {
+            useButton.textContent = "Limite atteinte";
+            useButton.disabled = true;
+        } 
+        else {
+            useButton.textContent = 'Utiliser';
+            useButton.onclick = () => useTicket(index);
+        }
+
+        item.appendChild(useButton);
+        list.appendChild(item);
+    });
 }
 
-class ShootingStar { 
-  constructor(){this.reset();} 
-  reset(){ 
-    this.x = Math.random()*W/2; 
-    this.y = Math.random()*H/2; 
-    this.len = Math.random()*80+50; 
-    this.speed = Math.random()*10+6; 
-    this.angle=Math.PI/4; 
-    this.active = Math.random()<0.3; 
-  } 
-  update(){ 
-    if(this.active){ 
-      this.x += this.speed*Math.cos(this.angle); 
-      this.y += this.speed*Math.sin(this.angle); 
-      if(this.x>W||this.y>H) this.reset(); 
-    } else { 
-      if(Math.random()<0.003) this.active=true; 
-    } 
-  } 
-  draw(){ 
-    if(this.active){ 
-      ctx.strokeStyle='white'; 
-      ctx.beginPath(); 
-      ctx.moveTo(this.x,this.y); 
-      ctx.lineTo(this.x-this.len*Math.cos(this.angle),this.y-this.len*Math.sin(this.angle)); 
-      ctx.stroke(); 
-    } 
-  } 
+function useTicket(index) {
+    const ticket = myTickets[index];
+    const now = new Date();
+    const usedTicket = { ...ticket, usedAt: now.toLocaleString('fr-FR') };
+    historyTickets.push(usedTicket);
+
+    // Retirer le ticket utilisé de "Mes tickets"
+    myTickets.splice(index, 1);
+
+    localStorage.setItem('myTickets', JSON.stringify(myTickets));
+    localStorage.setItem('historyTickets', JSON.stringify(historyTickets));
+    renderTickets();
+    renderHistory();
 }
 
-for(let i=0;i<200;i++) starfield.push(new Star());
-for(let i=0;i<30;i++) particles.push(new Particle(LOVE_LINES[Math.floor(Math.random()*LOVE_LINES.length)]));
-for(let i=0;i<3;i++) shootingStars.push(new ShootingStar());
+        function renderHistory() {
+            const list = document.getElementById('historyTicketsList');
+            if (historyTickets.length === 0) {
+                list.innerHTML = `<p>Aucun ticket n'a été utilisé pour le moment.</p>`;
+                return;
+            }
+            list.innerHTML = '';
+            historyTickets.forEach(ticket => {
+                const item = document.createElement('div');
+                item.className = 'ticket-item';
+                const emoji = allTickets[ticket.name] || '';
+                item.innerHTML = `<span>${emoji} ${ticket.name}</span><p style="font-size:0.9em; margin-top:5px;">Utilisé le: ${ticket.usedAt}</p>`;
+                list.appendChild(item);
+            });
+        }
 
-function animate(){
-  const grad=ctx.createLinearGradient(0,0,0,H);
-  grad.addColorStop(0,'#00001a');
-  grad.addColorStop(1,'#000000');
-  ctx.fillStyle=grad;
-  ctx.fillRect(0,0,W,H);
-  starfield.forEach(s=>{s.update();s.draw();});
-  particles.forEach(p=>{p.update();p.draw();});
-  shootingStars.forEach(ss=>{ss.update();ss.draw();});
-  requestAnimationFrame(animate);
-}
-animate();
-</script>
+        // --- New mini surprise functionality ---
+        const surpriseMessages = [
+            "Tu es la personne la plus incroyable que je connaisse. ❤️",
+            "Chaque moment avec toi est un cadeau. ✨",
+            "Je suis tellement chanceux(se) de t'avoir dans ma vie. 🥰",
+            "J'ai hâte de t'embrasser ! 😘",
+            "Un câlin surprise t'attend dès que tu me verras ! 🤗",
+            "Tu me manques déjà. 🥺"
+        ];
+        function showMiniSurprise() {
+            const surpriseDiv = document.getElementById('surpriseMessage');
+            const randomIndex = Math.floor(Math.random() * surpriseMessages.length);
+            surpriseDiv.textContent = surpriseMessages[randomIndex];
+            
+        }
+
+        // Initial view
+        showSection('temps');
+    </script>
+
 </body>
 </html>
