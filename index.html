@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nous 2</title>
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nous 2</title>
+<style>
         body {
             font-family: 'Dancing Script', cursive;
             text-align: center;
@@ -14,6 +14,7 @@
             margin-bottom: 150px;
             padding: 0;
         }
+
         h1 {
             font-size: 3em;
             margin: 20px 0;
@@ -194,11 +195,75 @@
             border-radius: 10px;
             animation: fadeIn 1s ease-in-out;
         }
+#welcomeScreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ffeef5, #fff0f8);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    overflow: hidden;
+    animation: fadeIn 1s ease-in-out;
+}
+
+#welcomeScreen h1 {
+    font-size: 2.8em;
+    color: #ff4d6d;
+    text-shadow: 2px 2px #ffd1dc;
+    margin-bottom: 30px;
+    text-align: center;
+    animation: slideDown 1s ease forwards;
+}
+
+#welcomeScreen button {
+    font-size: 1.5em;
+    padding: 15px 50px;
+    border: none;
+    border-radius: 50px;
+    background: linear-gradient(135deg, #ff9ec3, #ff5fa2);
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInButton 1s 0.7s forwards; /* délai pour que le bouton apparaisse après le texte */
+}
+
+#welcomeScreen button:hover {
+    background: linear-gradient(135deg, #ff7fa5, #ff337b);
+    transform: scale(1.1);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes slideDown {
+    from {opacity: 0; transform: translateY(-30px);}
+    to {opacity: 1; transform: translateY(0);}
+}
+
+@keyframes fadeInButton {
+    from {opacity: 0; transform: translateY(20px);}
+    to {opacity: 1; transform: translateY(0);}
+}
 
     </style>
 </head>
 <body>
+<div id="welcomeScreen">
+    <h1>Coucou mon ptit coeur, j'espère que tu passes une belle journée !</h1>
+    <button onclick="openSite()">Ouvrir le site</button>
+</div>
 
+<div id="siteContent" style="display:none;">
     <h1>Nous Deux 💖</h1>
 
     <div class="menu">
@@ -694,6 +759,27 @@ function useTicket(index) {
         // Initial view
         showSection('temps');
     </script>
+<script>
+// Ouvrir le site
+function openSite() {
+    const welcome = document.getElementById('welcomeScreen');
+    welcome.style.transition = 'opacity 0.8s';
+    welcome.style.opacity = '0';
+    setTimeout(() => {
+        welcome.style.display = 'none';
+        document.getElementById('siteContent').style.display = 'block';
+    }, 800);
+}
 
+// Générer des petits cœurs aléatoires
+for(let i=0; i<20; i++){
+    const heart = document.createElement('div');
+    heart.classList.add('heart');
+    heart.style.left = Math.random() * 100 + 'vw';
+    heart.style.animationDuration = (2 + Math.random()*3) + 's';
+    heart.style.width = heart.style.height = (10 + Math.random()*20) + 'px';
+    document.getElementById('welcomeScreen').appendChild(heart);
+}
+</script>
 </body>
 </html>
