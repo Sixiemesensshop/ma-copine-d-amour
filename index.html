@@ -546,22 +546,22 @@
         
         let myTickets = JSON.parse(localStorage.getItem('myTickets')) || [];
         let historyTickets = JSON.parse(localStorage.getItem('historyTickets')) || [];
-        
+        let bypassCooldown = false; // ⚡ permet d’ignorer le délai 24h
         function playCasino() {
     const lastTime = parseInt(localStorage.getItem('lastTicketTime'), 10);
     const now = new Date().getTime();
 
     // Vérifier si moins de 24h se sont écoulées
-    if (lastTime && now - lastTime < 24 * 60 * 60 * 1000) {
-        const remaining = 24 * 60 * 60 * 1000 - (now - lastTime);
-        const hours = Math.floor(remaining / (1000 * 60 * 60));
-        const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-        document.getElementById('casinoResult').textContent = 
-            `⏳ Vous devez attendre ${hours}h ${minutes}m ${seconds}s avant de retirer un nouveau ticket`;
-        document.getElementById('casinoResult').style.display = 'inline-block';
-        return;
-    }
+    if (!bypassCooldown && lastTime && now - lastTime < 24 * 60 * 60 * 1000) {
+    const remaining = 24 * 60 * 60 * 1000 - (now - lastTime);
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    const minutes = Math.floor((remaining % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+    document.getElementById('casinoResult').textContent = 
+        `⏳ Vous devez attendre ${hours}h ${minutes}m ${seconds}s avant de retirer un nouveau ticket`;
+    document.getElementById('casinoResult').style.display = 'inline-block';
+    return;
+}
 
     const ticketsWithProb = [
         { name: "Un poème", prob: 4.5 },
